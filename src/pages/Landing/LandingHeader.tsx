@@ -1,4 +1,4 @@
-import {AppBar, IconButton, Toolbar, Typography} from "@mui/material";
+import {AppBar, IconButton, Toolbar} from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import style from "./Landing.module.css"
 
@@ -14,7 +14,7 @@ function LandingHeader() {
                 >
                     <MenuIcon sx={{color: "#66fcf1"}} ></MenuIcon>
                 </IconButton>
-                <h3 className={style.robotoMonoText}>MENU</h3>
+                <h3>MENU</h3>
             </Toolbar>
         </AppBar>
     )

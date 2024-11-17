@@ -1,68 +1,95 @@
-@import url('https://fonts.googleapis.com/css?family=Roboto Mono');
 
 .container {
     width: 100%;
     height: 100%;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    align-items: center;
 }
 
 .content {
     width: 100%;
-    height: 100%;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     gap: 40px;
+    flex-grow: 1;
 }
 
 .startButton {
     color: #c5c6c7 !important;
-    font-family: "Noto Sans" !important;
+    font-family: "Noto Sans", serif !important;
     background-color: transparent !important; /* Transparent background */
     border: 2px solid #66fcf1 !important; /* Colored border */
     border-radius: 10px !important; /* Rounded corners */
     font-size: 20px !important;
 }
 
-.title {
+.content .title {
     color: #66fcf1;
     font-size: 170px;
-    font-family: "Noto Sans";
+    font-family: "Noto Sans", serif;
     font-weight: 700;
     line-height: 195px;
     margin: 0 0 0 0;
 }
 
-.secondParagraph {
+.content .secondParagraph {
     color: #c5c6c7;
     font-size: 24px;
-    font-family: "Roboto Mono";
+    font-family: "Roboto Mono", serif;
     font-weight: 700;
     line-height: 32px;
     margin: 0 0 0 0;
+
 }
 
-.description {
+.content .description {
     width: 600px;
     color: #c5c6c7;
     font-size: 16px;
-    font-family: "Roboto Mono";
+    font-family: "Roboto Mono", serif;
     line-height: 24px;
     text-align: center;
     margin: 0 0 0 0;
 }
 
-/* AppBar.module.css */
 .transparentAppBar {
     background-color: transparent !important;
     box-shadow: none !important;
 }
 
-.robotoMonoText {
-    font-family: "Roboto Mono";
+.transparentAppBar h3 {
+    font-family: "Roboto Mono", serif;
 }
+
+.footer {
+    bottom: 0;
+    background-color: transparent;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    height: 80px;
+}
+
+.copyright {
+    color: #c5c6c7;
+}
+
+.navigation {
+    display: flex;
+    width: 100%;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+}
+
+.navigation a {
+    color: #c5c6c7;
+    text-decoration: none;
+}
+
 
