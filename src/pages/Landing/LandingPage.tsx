@@ -3,6 +3,7 @@ import {Button} from "@mui/material";
 import style from "./Landing.module.css"
 import LandingHeader from "./LandingHeader";
 import LandingFooter from "./LandingFooter";
+import {useNavigate} from "react-router-dom";
 
 const title: string = "BLOOMIE"
 const secondParagraph: string = "Unleash Your Creativity with Bloom"
@@ -10,6 +11,7 @@ const description: string = "Generate stunning images with AI in seconds! Our pl
     "unique visuals for any project, from artwork to marketing materials, powered by advanced artificial intelligence"
 
 function LandingPage() {
+    const navigate = useNavigate()
     return (
         <BackgroundOverlay >
             <div className={style.container}>
@@ -18,7 +20,9 @@ function LandingPage() {
                     <p className={style.title}>{title}</p>
                     <p className={style.secondParagraph}>{secondParagraph}</p>
                     <p className={style.description}>{description}</p>
-                    <Button className={style.startButton}>Start Generating Image</Button>
+                    <Button className={style.startButton} onClick={() => {
+                        navigate("/image-generator")
+                    }}>Start Generating Image</Button>
                 </div>
                 <LandingFooter></LandingFooter>
             </div>
