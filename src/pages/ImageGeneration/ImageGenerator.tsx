@@ -1,6 +1,7 @@
 import Grid from '@mui/material/Grid2';
 import ImagePrompt from "./ImagePrompt/ImagePrompt";
 import ImageDisplay from "./ImageDisplay/ImageDisplay";
+import MyCreation from "./ImagePrompt/MyCreation";
 
 function ImageGenerator() {
     return (
@@ -12,7 +13,7 @@ function ImageGenerator() {
                 <ImageDisplay></ImageDisplay>
             </Grid>
             <Grid display={{ xs: 'none', md: 'flex'}} size={{ xs: 0, md: 2 }}>
-                <ImagePrompt></ImagePrompt>
+                <MyCreation></MyCreation>
             </Grid>
         </Grid>
     )

@@ -1,8 +1,29 @@
 .container {
     display: flex;
     flex-direction: column;
-    background-color: #1E1F22 !important;
     border-right: 2px #404648 !important;
-    min-height: 100%;
+    gap: 20px;
+    color: white !important;
+    background-color: #1E1F22 !important;
+    height: 100%;
     width: 100%;
+    padding: 20px 20px 20px 20px;
+    box-sizing: border-box;
+}
+
+.horizontalContainer {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    width: 100%;
+}
+
+.center {
+    align-items: center;
+    justify-content: center;
+}
+
+.spacingBetween {
+    align-items: center;
+    justify-content: space-between;
 }
