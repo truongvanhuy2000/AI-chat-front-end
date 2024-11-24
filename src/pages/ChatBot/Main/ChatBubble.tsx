@@ -16,7 +16,7 @@ function ChatBubble({message}: ChatBubbleProps) {
             <Typography color={'textPrimary'}>{message.message}</Typography>
         </>
         : <>
-            <BoundingBox sx={{backgroundColor: 'rgba(102,252,241,0.72)'}}>
+            <BoundingBox sx={{background: 'linear-gradient(81deg, #e6fa72 6%, #62ffb8 58%)'}}>
                 <Typography sx={{color: '#2f2f2f'}}>{message.message}</Typography>
             </BoundingBox>
             <AccountCircleRoundedIcon color='primary' fontSize={'large'}/>

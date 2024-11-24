@@ -19,11 +19,11 @@ function ChatSidePanel() {
 
     return (
         <GenericSidePanel sx={{
-            width: isOpen ? 300 : 0, // Adjust width for open/close
+            width: isOpen ? {xl: '300px', md: '200px', sm: '200px'} : 0, // Adjust width for open/close
             transition: "width 0.5s ease", // Smooth transition
             // visibility: isOpen ? "visible" : "hidden",
             display: isOpen ? "flex" : "none",
-            padding: isOpen ? '10px 10px 10px 10px' : '0px'
+            padding: isOpen ? '10px 10px 10px 10px' : '0px',
         }}>
             <Stack direction='row' spacing='10px'>
                 <HoverableIcon onClick={togglePanel}>
