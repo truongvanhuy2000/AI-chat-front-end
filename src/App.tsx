@@ -1,18 +1,21 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
-import LandingPage from "./pages/Landing/LandingPage";
 import AppRoutes from "./routes/AppRoutes";
 import {BrowserRouter} from "react-router-dom";
+import {ThemeProvider} from "@mui/material";
+import DefaultTheme from "./theme/DefaultTheme";
 
 function App() {
-  return (
-    <div className="App">
-        <BrowserRouter>
-            <AppRoutes/>
-        </BrowserRouter>
-    </div>
-  );
+    return (
+        <div className="App">
+            <ThemeProvider theme={DefaultTheme}>
+                <BrowserRouter>
+                    <AppRoutes/>
+                </BrowserRouter>
+            </ThemeProvider>
+
+        </div>
+    );
 }
 
 export default App;

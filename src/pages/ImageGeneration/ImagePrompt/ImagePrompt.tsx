@@ -7,6 +7,7 @@ import GenerateButton from "./GenerateButton";
 import React from "react";
 import ImageIcon from '@mui/icons-material/Image';
 import MenuItem from "@mui/material/MenuItem";
+import ButtonTab from "../../../components/tab/ButtonTab";
 
 function a11yProps(index) {
     return {
@@ -33,8 +34,8 @@ function ImagePrompt(props: any) {
         <Box className={style.container}>
             <Box className={style.horizontalContainer}>
                 <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
-                    <Tab icon={<><FontDownloadOutlinedIcon/>Text to Image</>} {...a11yProps(0)} />
-                    <Tab icon={<><ImageIcon/>Image to Image</>} {...a11yProps(1)} />
+                    <ButtonTab icon={<><FontDownloadOutlinedIcon/>Text to Image</>} {...a11yProps(0)} />
+                    <ButtonTab icon={<><ImageIcon/>Image to Image</>} {...a11yProps(1)} />
                 </Tabs>
             </Box>
             <PromptTextBox></PromptTextBox>

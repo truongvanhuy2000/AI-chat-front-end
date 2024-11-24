@@ -5,14 +5,9 @@ import BackgroundOverlay from "../overlay/BackgroundOverlay";
 
 function AppLayout() {
     return (
-        <BackgroundOverlay>
-            <div className={style.container}>
-                <ResponsiveAppBar></ResponsiveAppBar>
-                <div className={style.content}>
-                    <Outlet></Outlet>
-                </div>
-            </div>
-        </BackgroundOverlay>
+        <div className={style.container}>
+            <Outlet></Outlet>
+        </div>
     )
 }
 

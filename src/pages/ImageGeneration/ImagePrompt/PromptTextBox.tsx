@@ -17,7 +17,7 @@ function PromptTextBox() {
                     style={{
                         color: "#62ffb8",
                         backgroundColor: "#3e7554"
-                }}>
+                    }}>
                     <AutoAwesomeIcon/>
                 </Button>
             </Box>
