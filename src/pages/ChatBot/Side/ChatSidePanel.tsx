@@ -1,29 +1,41 @@
 import GenericSidePanel from "../../../components/layout/SidePanel/GenericSidePanel";
-import WhiteStyledButton from "../../../components/button/WhiteStyledButton";
 import Typography from "@mui/material/Typography";
-import {Divider, Stack, TextField} from "@mui/material";
+import {Divider, Stack, TextField, useMediaQuery} from "@mui/material";
 import ChatHistory from "./ChatHistory";
 import ColorfulGradientButton from "../../../components/button/ColorfulGradientButton";
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
-import CreateNewFolderOutlinedIcon from '@mui/icons-material/CreateNewFolderOutlined';
 import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
 import BoxMenuItem from "../../../components/BoxMenuItem";
 import WidgetsRoundedIcon from '@mui/icons-material/WidgetsRounded';
 import HoverableIcon from "../../../components/HoverableIcon";
 import AddCircleOutlineRoundedIcon from '@mui/icons-material/AddCircleOutlineRounded';
-import {useContext} from "react";
-import {SidePanelCollapsibleContext} from "../ChatBot";
+import {useContext, useEffect} from "react";
+import {CurrentSelectedChatContext, SidePanelCollapsibleContext} from "../ChatBot";
 
 function ChatSidePanel() {
     const [isOpen, togglePanel] = useContext(SidePanelCollapsibleContext);
+    const [selectedChat, setSelectedChat] = useContext(CurrentSelectedChatContext);
+    const isSm = useMediaQuery((theme) => theme.breakpoints.down("sm")); // Small screens
+    const isMd = useMediaQuery((theme) => theme.breakpoints.down("md")); // Medium screens
+
+    useEffect(() => {
+        if ((isSm || isMd) && isOpen) {
+            togglePanel()
+        }
+    }, [isSm, isMd])
+
+    function onClickNewChat() {
+        setSelectedChat(null)
+    }
 
     return (
         <GenericSidePanel sx={{
-            width: isOpen ? {xl: '300px', md: '200px', sm: '200px'} : 0, // Adjust width for open/close
-            transition: "width 0.5s ease", // Smooth transition
-            // visibility: isOpen ? "visible" : "hidden",
-            display: isOpen ? "flex" : "none",
+            width: isOpen ? {xl: '300px', md: '250px', sm: '250px', xs: '250px'} : 0, // Adjust width for open/close
+            transition: "width 0.2s ease", // Smooth transition
+            position: {xl: 'relative', md: 'absolute', sm: 'absolute', xs: 'absolute'},
             padding: isOpen ? '10px 10px 10px 10px' : '0px',
+            opacity: isOpen ? 100 : 0,
+            zIndex: 4,
         }}>
             <Stack direction='row' spacing='10px'>
                 <HoverableIcon onClick={togglePanel}>
@@ -31,7 +43,9 @@ function ChatSidePanel() {
                 </HoverableIcon>
             </Stack>
             <Stack direction='row' spacing='10px'>
-                <ColorfulGradientButton sx={{
+                <ColorfulGradientButton
+                    onClick={onClickNewChat}
+                    sx={{
                     justifyContent: "flex-start",
                     gap: "15px",
                     flexGrow: 1,

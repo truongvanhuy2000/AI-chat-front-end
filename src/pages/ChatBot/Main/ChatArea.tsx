@@ -1,10 +1,7 @@
-import Box from "@mui/material/Box";
-import {Avatar, Stack, TextField, useTheme} from "@mui/material";
-import Logo from "../../../components/Logo";
+import {Stack, useTheme} from "@mui/material";
 import ChatBox from "../../../components/ChatBox";
 import RoundButton from "../../../components/button/RoundButton";
-import SendOutlinedIcon from '@mui/icons-material/SendOutlined';
-import {useContext, useState} from "react";
+import {useContext, useEffect, useState} from "react";
 import Typography from "@mui/material/Typography";
 import SendRoundedIcon from '@mui/icons-material/SendRounded';
 import {ReactTyped} from "react-typed";
@@ -14,91 +11,64 @@ import ChatBubble from "./ChatBubble";
 import MenuItem from "@mui/material/MenuItem";
 import StyledSelect from "../../../components/SelectionMenuItem";
 import SettingsSuggestRoundedIcon from "@mui/icons-material/SettingsSuggestRounded";
-import {deepOrange} from "@mui/material/colors";
 import WidgetsRoundedIcon from "@mui/icons-material/WidgetsRounded";
 import HoverableIcon from "../../../components/HoverableIcon";
-import {SidePanelCollapsibleContext} from "../ChatBot";
+import {CurrentSelectedChatContext, SidePanelCollapsibleContext} from "../ChatBot";
+import ChatAPI from "../../../services/ChatAPI";
+import MockChatAPI from "../../../services/MockChatAPI";
+import Chat from "../../../model/Chat";
+import ChatModel from "../../../model/ChatModel";
 
-export const testMessage: Message[] = [
-    {
-        index: 0,
-        role: Role.HUMAN,
-        message: "Hi, how are you?",
-    },
-    {
-        index: 1,
-        role: Role.BOT,
-        message: "Hello! I'm doing well, thank you. How can I assist you today?",
-    },
-    {
-        index: 2,
-        role: Role.HUMAN,
-        message: "Can you tell me a joke?",
-    },
-    {
-        index: 3,
-        role: Role.BOT,
-        message: "Sure! Why don’t skeletons fight each other? Because they don’t have the guts!",
-    },
-    {
-        index: 4,
-        role: Role.HUMAN,
-        message: "Haha, that's a good one. What's the weather like today?",
-    },
-    {
-        index: 5,
-        role: Role.BOT,
-        message: "I don't have real-time weather data, but I can help you find it online if you want!",
-    },
-    {
-        index: 6,
-        role: Role.HUMAN,
-        message: "I don't have real-time weather data, but I can help you find it online if you want!",
-    },
-    {
-        index: 7,
-        role: Role.BOT,
-        message: "I don't have real-time weather data, but I can help you find it online if you want!",
-    },
-    {
-        index: 8,
-        role: Role.HUMAN,
-        message: "I don't have real-time weather data, but I can help you find it online if you want!",
-    },
-    {
-        index: 9,
-        role: Role.BOT,
-        message: "I don't have real-time weather data, but I can help you find it online if you want!",
-    },
-    {
-        index: 10,
-        role: Role.HUMAN,
-        message: "I don't have real-time weather data, but I can help you find it online if you want!",
-    },
-    {
-        index: 11,
-        role: Role.BOT,
-        message: "I don't have real-time weather data, but I can help you find it online if you want!",
-    },
-    {
-        index: 12,
-        role: Role.HUMAN,
-        message: "I don't have real-time weather data, but I can help you find it online if you want!",
-    },
-];
+const chatAPI: ChatAPI = MockChatAPI
 
 function ChatArea() {
     const theme = useTheme();
-    const [messages, setMessages] = useState<Message[]>(testMessage);
+    const [messages, setMessages] = useState<Message[]>(null);
     const [isOpen, togglePanel] = useContext(SidePanelCollapsibleContext);
+    const [selectedChat] = useContext(CurrentSelectedChatContext);
+    const [modelList, setModelList] = useState<ChatModel[]>([]);
+
+    async function getModelList() {
+        try {
+            const modelList: ChatModel[] = await chatAPI.getModelList();
+            setModelList(modelList);
+        } catch (e) {
+
+        }
+    }
+
+    async function getMessages(id: number) {
+        try {
+            const messages: Message[] = await chatAPI.getAllMessagesFromChat(id)
+            setMessages(messages)
+        } catch (e) {
+
+        } finally {
+
+        }
+    }
+
+    useEffect(() => {
+        getModelList().then()
+    }, []);
+
+    useEffect(() => {
+        if (selectedChat) {
+            getMessages(selectedChat.id).then()
+        } else {
+            setMessages(null)
+        }
+    }, [selectedChat]);
 
     return (
         <Stack direction='column' sx={{
             flex: 1,
             backgroundColor: theme.palette.grey["800"],
             padding: '20px 20px 20px 20px',
-            justifyContent: messages ? null : 'center',
-            gap: "20px",
+            zIndex: 2,
+            height: '100vh',
+            boxSizing: 'border-box',
+            gap: '20px'
         }}>
             <Stack direction={"row"} sx={{height: '30px'}}>
                 {
@@ -108,61 +78,73 @@ function ChatArea() {
                     </HoverableIcon>
                 }
                 <StyledSelect
+                    defaultValue={1}
                     renderValue={(value) =>
                         <>
                             <Stack direction="row" alignItems="center" gap='10px'>
                                 <SettingsSuggestRoundedIcon fontSize={'small'}/>
-                                <Typography variant='h6' sx={{fontWeight: 800,}}>{`${value}`}</Typography>
+                                <Typography variant='h6' sx={{fontWeight: 'bold',}}>
+                                    {`${modelList.find(it => it.id === value)?.name}`}
+                                </Typography>
                             </Stack>
                         </>
                     }
                     labelId="side-select-label"
                 >
-                    <MenuItem value="GPT Model 4o">GPT Model 4o</MenuItem>
-                    <MenuItem value="MiniGPT 4o">MiniGPT 4o</MenuItem>
-                    <MenuItem value="Legacy GPT4.0">Legacy GPT4.0</MenuItem>
+                    {
+                        modelList.map(it => <MenuItem value={it.id}>{it.name}</MenuItem>)
+                    }
+
                 </StyledSelect>
-                <Avatar sx={{ml: 'auto', bgcolor: deepOrange[500]}}>N</Avatar>
             </Stack>
-            {messages &&
-                <Stack sx={{
-                    width: "100%",
-                    height: '100vh',
-                    overflow: "auto",
-                }}>
-                    <Stack direction='column' gap={'40px'} sx={{
-                        width: {xl: '60%', md: '80%', sm: '90%'},
-                        alignSelf: "center",
-                        '& > *': {flexShrink: 0},
-                    }}>
-                        {
-                            messages.map((value: Message, index: number) => {
-                                return <ChatBubble message={value}/>
-                            })
-                        }
-                    </Stack>
-                </Stack>
-            }
-            <Stack sx={{
-                bottom: 0,
-                alignItems: 'center',
-                gap: '20px',
-                mt: messages ? 'auto' : null,
-                width: "100%"
+            <Stack direction='column' sx={{
+                justifyContent: messages ? null : 'center',
+                gap: "20px",
+                height: '100%',
+                overflow: "auto",
             }}>
-                {!messages &&
-                    <Typography variant='h4' sx={{color: theme.palette.common.white, fontWeight: 800,}}>
-                        <ReactTyped strings={["What can I help with?"]} typeSpeed={50} showCursor={false}/>
-                    </Typography>
+                {messages &&
+                    <Stack sx={{
+                        width: "100%",
+                        overflow: "auto",
+                    }}>
+                        <Stack direction='column' gap={'40px'} sx={{
+                            width: {xl: '60%', md: '80%', sm: '90%', xs: '90%'},
+                            alignSelf: "center",
+                            '& > *': {flexShrink: 0},
+                        }}>
+                            {
+                                messages.map((value: Message, index: number) => {
+                                    return <ChatBubble message={value}/>
+                                })
+                            }
+                        </Stack>
+                    </Stack>
                 }
-                <BoundingBox sx={{
-                    width: {xl: '60%', md: '80%', sm: '90%'},
+                <Stack sx={{
+                    bottom: 0,
+                    alignItems: 'center',
+                    gap: '20px',
+                    mt: messages ? 'auto' : null,
+                    width: "100%"
                 }}>
-                    <ChatBox maxRows={6} placeholder={'Message BLOOMChat'} multiline></ChatBox>
-                    <RoundButton sx={{ml: 'auto', background: 'linear-gradient(81deg, #e6fa72 6%, #62ffb8 58%)'}}>
-                        <SendRoundedIcon fontSize={'small'} sx={{color: "#1e1e1e"}}/>
-                    </RoundButton>
-                </BoundingBox>
+                    {!messages &&
+                        <Typography variant='h4' sx={{color: theme.palette.common.white, fontWeight: 800,}}>
+                            <ReactTyped strings={["What can I help with?"]} typeSpeed={50} showCursor={false}/>
+                        </Typography>
+                    }
+                    <BoundingBox sx={{
+                        width: {xl: '60%', md: '80%', sm: '90%', xs: '90%'},
+                    }}>
+                        <ChatBox maxRows={6} placeholder={'Message BLOOMChat'} multiline></ChatBox>
+                        <RoundButton sx={{
+                            ml: 'auto',
+                            background: 'linear-gradient(81deg, #e6fa72 6%, #62ffb8 58%)'
+                        }}>
+                            <SendRoundedIcon fontSize={'small'} sx={{color: "#1e1e1e"}}/>
+                        </RoundButton>
+                    </BoundingBox>
+                </Stack>
             </Stack>
         </Stack>
     )

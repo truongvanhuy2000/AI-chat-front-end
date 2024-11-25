@@ -1,19 +1,22 @@
 import {Message, Role} from "../../../model/Message";
 import BoundingBox from "../../../components/BoundingBox";
 import Typography from "@mui/material/Typography";
-import {Stack} from "@mui/material";
-import SmartToyRoundedIcon from '@mui/icons-material/SmartToyRounded';
+import {Stack, useTheme} from "@mui/material";
 import AccountCircleRoundedIcon from '@mui/icons-material/AccountCircleRounded';
-import SmartToyOutlinedIcon from '@mui/icons-material/SmartToyOutlined';
+import {SiProbot} from "react-icons/si";
+
 interface ChatBubbleProps {
     message: Message,
 }
 
 function ChatBubble({message}: ChatBubbleProps) {
+    const theme = useTheme()
     const messageDisplay = message.role === Role.BOT
         ? <>
-            <SmartToyOutlinedIcon color='primary' fontSize={'large'}/>
-            <Typography color={'textPrimary'}>{message.message}</Typography>
+            <SiProbot color={theme.palette.primary.main} size={'30px'}/>
+            <BoundingBox sx={{background: 'transparent'}}>
+                <Typography color={'textPrimary'}>{message.message}</Typography>
+            </BoundingBox>
         </>
         : <>
             <BoundingBox sx={{background: 'linear-gradient(81deg, #e6fa72 6%, #62ffb8 58%)'}}>

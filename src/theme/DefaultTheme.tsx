@@ -18,8 +18,8 @@ const DefaultTheme: Theme = createTheme({
             main: "#f93a37", // --text-error
         },
         grey: {
-            "900": "#171717",
-            "800": "#212121",
+            "900": "#111111",
+            "800": "#1c1c1c",
             "700": "#2f2f2f"
         },
         divider: "hsl(0,0%,34%)", // --border-light

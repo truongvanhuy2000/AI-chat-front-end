@@ -1,23 +1,35 @@
 import ChatItem from "./ChatItem";
 import Box from "@mui/material/Box";
-import {useState} from "react";
+import {useContext, useEffect, useState} from "react";
+import ChatAPI from "../../../services/ChatAPI";
+import MockChatAPI from "../../../services/MockChatAPI";
+import Chat from "../../../model/Chat";
+import {useSnackbar} from "notistack";
+import {CurrentSelectedChatContext} from "../ChatBot";
+
+const chatAPI: ChatAPI = MockChatAPI
 
 function ChatHistory() {
-    const [selectedIndex, setSelectedIndex] = useState(null);
+    const [chats, setChats] = useState<Chat[]>([]);
+    const { enqueueSnackbar } = useSnackbar();
+    const [selectedChat, setSelectedChat] = useContext(CurrentSelectedChatContext);
 
-    const chatItems = [
-        'New conversation',
-        'New conversation',
-        'New conversation',
-        'New conversation',
-        'New conversation',
-        'New conversation',
-        'New conversation',
-        'New conversation',
-    ];
+    async function getChatList() {
+        try {
+            const chatList: Chat[] = await chatAPI.getChatList()
+            console.log(chatList)
+            setChats(chatList)
+        } catch (e) {
+            enqueueSnackbar(e.message, {variant: 'error'});
+        } finally {
+        }
+    }
+    useEffect(() => {
+        getChatList().then()
+    }, []);
 
-    const handleClick = (index) => {
-        setSelectedIndex(index); // Set selected item by index
+    const handleClick = (item: Chat) => {
+        setSelectedChat(item); // Set selected item by index
     };
 
     return (
@@ -30,12 +42,12 @@ function ChatHistory() {
             overflow: "auto",
             '& > *': { flexShrink: 0 },
         }}>
-            {chatItems.map((item, index) => (
+            {chats.map((item: Chat, index: number) => (
                 <ChatItem
                     key={index}
-                    itemName={item}
-                    isSelected={selectedIndex === index} // Compare index to determine selected
-                    onClick={() => handleClick(index)}
+                    itemName={item.name}
+                    isSelected={selectedChat?.id === item.id} // Compare index to determine selected
+                    onClick={() => handleClick(item)}
                 />
             ))}
         </Box>

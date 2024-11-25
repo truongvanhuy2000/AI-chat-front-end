@@ -10,6 +10,7 @@ const GenericSidePanel = styled(Box)(({ theme }) => ({
     width: '300px',
     padding: '10px 10px 10px 10px',
     boxSizing: 'border-box', // CamelCase for CSS properties
+    height: '100vh'
 }))
 
 export default GenericSidePanel;
