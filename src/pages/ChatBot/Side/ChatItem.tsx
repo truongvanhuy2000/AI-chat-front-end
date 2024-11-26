@@ -5,6 +5,7 @@ import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import Typography from "@mui/material/Typography";
 import StickyNote2OutlinedIcon from '@mui/icons-material/StickyNote2Outlined';
+import {ReactComponent as MessageSVG} from '../../../assets/message-192.svg';
 
 function ChatItem({itemName, isSelected, onClick}) {
     return (
@@ -17,7 +18,7 @@ function ChatItem({itemName, isSelected, onClick}) {
                 flexGrow: 1,
             }}>
                 <Stack direction='row' gap='10px'>
-                    <StickyNote2OutlinedIcon fontSize={'small'}/>
+                    <MessageSVG style={{ width: '20px'}}/>
                     <Typography>{itemName}</Typography>
                 </Stack>
                 {isSelected &&

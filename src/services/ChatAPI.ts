@@ -3,6 +3,7 @@ import {Message} from "../model/Message";
 import ChatModel from "../model/ChatModel";
 
 interface ChatAPI {
+    createNewChat(): Promise<Chat>;
     /**
      * Get info of a chat, don't put messages here
      * @param id

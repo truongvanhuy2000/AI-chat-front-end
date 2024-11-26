@@ -1,7 +1,7 @@
-import {Stack, useTheme} from "@mui/material";
+import {Stack, TextField, useTheme} from "@mui/material";
 import ChatBox from "../../../components/ChatBox";
 import RoundButton from "../../../components/button/RoundButton";
-import {useContext, useEffect, useState} from "react";
+import {useContext, useEffect, useRef, useState} from "react";
 import Typography from "@mui/material/Typography";
 import SendRoundedIcon from '@mui/icons-material/SendRounded';
 import {ReactTyped} from "react-typed";
@@ -13,20 +13,25 @@ import StyledSelect from "../../../components/SelectionMenuItem";
 import SettingsSuggestRoundedIcon from "@mui/icons-material/SettingsSuggestRounded";
 import WidgetsRoundedIcon from "@mui/icons-material/WidgetsRounded";
 import HoverableIcon from "../../../components/HoverableIcon";
-import {CurrentSelectedChatContext, SidePanelCollapsibleContext} from "../ChatBot";
+import {ChatAPIContext, CurrentSelectedChatContext, SidePanelCollapsibleContext} from "../ChatBot";
 import ChatAPI from "../../../services/ChatAPI";
-import MockChatAPI from "../../../services/MockChatAPI";
-import Chat from "../../../model/Chat";
 import ChatModel from "../../../model/ChatModel";
-
-const chatAPI: ChatAPI = MockChatAPI
+import {ReactComponent as AiModelSVG} from '../../../assets/standard-model.svg';
+import MenuIcon from "../../../components/MenuIcon";
+import SettingsRoundedIcon from '@mui/icons-material/SettingsRounded';
 
 function ChatArea() {
+    const chatAPI: ChatAPI = useContext(ChatAPIContext)
     const theme = useTheme();
-    const [messages, setMessages] = useState<Message[]>(null);
+    const [messages, setMessages] = useState<Message[]>([]);
     const [isOpen, togglePanel] = useContext(SidePanelCollapsibleContext);
-    const [selectedChat] = useContext(CurrentSelectedChatContext);
+    const {selectedChat} = useContext(CurrentSelectedChatContext);
     const [modelList, setModelList] = useState<ChatModel[]>([]);
+    const inputChatMessage = useRef<string>("")
+    const bottomRef = useRef(null);
+
+    console.log("selectedChat", selectedChat)
+    console.log("messages", messages)
 
     async function getModelList() {
         try {
@@ -37,13 +42,33 @@ function ChatArea() {
         }
     }
 
+    const scrollToBottom = () => {
+        bottomRef.current?.scrollIntoView({behavior: 'smooth'});
+    };
+
     async function getMessages(id: number) {
         try {
             const messages: Message[] = await chatAPI.getAllMessagesFromChat(id)
             setMessages(messages)
         } catch (e) {
 
-        } finally {
+        }
+    }
+
+    async function sendMessage(chatID: number, inputText: string) {
+        console.log("sendMessage", chatID, inputText);
+        try {
+            const sentMessage: Message = {
+                message: inputText,
+                role: Role.HUMAN
+            }
+            const receivedMessage: Message = await chatAPI.sendChatMessage(chatID, sentMessage)
+            if (!messages) {
+                setMessages([sentMessage, receivedMessage])
+            } else {
+                setMessages([...messages, sentMessage, receivedMessage])
+            }
+        } catch (e) {
 
         }
     }
@@ -51,6 +76,10 @@ function ChatArea() {
     useEffect(() => {
         getModelList().then()
     }, []);
+
+    useEffect(() => {
+        scrollToBottom()
+    }, [messages]);
 
     useEffect(() => {
         if (selectedChat) {
@@ -74,25 +103,22 @@ function ChatArea() {
                 {
                     !isOpen &&
                     <HoverableIcon onClick={togglePanel}>
-                        <WidgetsRoundedIcon fontSize='medium' color={'primary'}/>
+                        <MenuIcon/>
                     </HoverableIcon>
                 }
                 <StyledSelect
+                    sx={{ml: 'auto'}}
                     defaultValue={1}
                     renderValue={(value) =>
-                        <>
-                            <Stack direction="row" alignItems="center" gap='10px'>
-                                <SettingsSuggestRoundedIcon fontSize={'small'}/>
-                                <Typography variant='h6' sx={{fontWeight: 'bold',}}>
-                                    {`${modelList.find(it => it.id === value)?.name}`}
-                                </Typography>
-                            </Stack>
-                        </>
+                        <Typography variant='h6' sx={{fontWeight: 'bold',}}>
+                            {`${modelList.find(it => it.id === value)?.name}`}
+                        </Typography>
                     }
+                    IconComponent={SettingsRoundedIcon}
                     labelId="side-select-label"
                 >
                     {
-                        modelList.map(it => <MenuItem value={it.id}>{it.name}</MenuItem>)
+                        modelList.map(((it, index) => <MenuItem key={index} value={it.id}>{it.name}</MenuItem>))
                     }
 
                 </StyledSelect>
@@ -115,9 +141,10 @@ function ChatArea() {
                         }}>
                             {
                                 messages.map((value: Message, index: number) => {
-                                    return <ChatBubble message={value}/>
+                                    return <ChatBubble message={value} index={index}/>
                                 })
                             }
+                            <div ref={bottomRef}/>
                         </Stack>
                     </Stack>
                 }
@@ -130,17 +157,24 @@ function ChatArea() {
                 }}>
                     {!messages &&
                         <Typography variant='h4' sx={{color: theme.palette.common.white, fontWeight: 800,}}>
-                            <ReactTyped strings={["What can I help with?"]} typeSpeed={50} showCursor={false}/>
+                            <ReactTyped strings={["What can I help with?"]} typeSpeed={30} showCursor={false}/>
                         </Typography>
                     }
                     <BoundingBox sx={{
                         width: {xl: '60%', md: '80%', sm: '90%', xs: '90%'},
                     }}>
-                        <ChatBox maxRows={6} placeholder={'Message BLOOMChat'} multiline></ChatBox>
-                        <RoundButton sx={{
-                            ml: 'auto',
-                            background: 'linear-gradient(81deg, #e6fa72 6%, #62ffb8 58%)'
-                        }}>
+                        <ChatBox
+                            onChange={event => inputChatMessage.current = event.target.value}
+                            maxRows={6} placeholder={'Message BLOOMChat'} multiline
+                        ></ChatBox>
+                        <RoundButton
+                            onClick={() => {
+                                sendMessage(selectedChat.id, inputChatMessage.current)
+                            }}
+                            sx={{
+                                ml: 'auto',
+                                background: 'linear-gradient(81deg, #e6fa72 6%, #62ffb8 58%)'
+                            }}>
                             <SendRoundedIcon fontSize={'small'} sx={{color: "#1e1e1e"}}/>
                         </RoundButton>
                     </BoundingBox>

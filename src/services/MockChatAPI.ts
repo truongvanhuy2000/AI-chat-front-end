@@ -2,9 +2,8 @@ import ChatAPI from "./ChatAPI";
 import Chat from "../model/Chat";
 import {Message, Role} from "../model/Message";
 import ChatModel from "../model/ChatModel";
-import axios from "axios";
 
-const dummyData = [
+const dummyData: Chat[] = [
     {
         id: 1,
         name: "Chat with Alice",
@@ -211,6 +210,15 @@ function getRandomQuote() {
 }
 
 const MockChatAPI: ChatAPI = {
+    createNewChat(): Promise<Chat> {
+        const newChat: Chat = {
+            date: new Date(),
+            id: dummyData.length + 1,
+            name: "New Conversation"
+        }
+        dummyData.push(newChat);
+        return Promise.resolve(newChat);
+    },
     async deleteAllChat(): Promise<void> {
         return Promise.resolve(undefined);
     }, async deleteChat(id: string): Promise<void> {

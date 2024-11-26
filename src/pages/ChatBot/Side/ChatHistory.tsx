@@ -1,18 +1,23 @@
 import ChatItem from "./ChatItem";
 import Box from "@mui/material/Box";
-import {useContext, useEffect, useState} from "react";
+import {useContext, useEffect} from "react";
 import ChatAPI from "../../../services/ChatAPI";
 import MockChatAPI from "../../../services/MockChatAPI";
 import Chat from "../../../model/Chat";
 import {useSnackbar} from "notistack";
-import {CurrentSelectedChatContext} from "../ChatBot";
-
-const chatAPI: ChatAPI = MockChatAPI
+import {
+    ChatAPIContext,
+    ChatListContext,
+    ChatListContextProps,
+    CurrentSelectedChatContext,
+    CurrentSelectedChatContextProps
+} from "../ChatBot";
 
 function ChatHistory() {
-    const [chats, setChats] = useState<Chat[]>([]);
-    const { enqueueSnackbar } = useSnackbar();
-    const [selectedChat, setSelectedChat] = useContext(CurrentSelectedChatContext);
+    const chatAPI: ChatAPI = useContext(ChatAPIContext)
+    const {chats, setChats}: ChatListContextProps = useContext(ChatListContext);
+    const {enqueueSnackbar} = useSnackbar();
+    const {selectedChat, setSelectedChat}: CurrentSelectedChatContextProps = useContext(CurrentSelectedChatContext);
 
     async function getChatList() {
         try {
@@ -24,6 +29,7 @@ function ChatHistory() {
         } finally {
         }
     }
+
     useEffect(() => {
         getChatList().then()
     }, []);
@@ -40,9 +46,10 @@ function ChatHistory() {
             marginTop: '10px',
             height: '100vh',
             overflow: "auto",
-            '& > *': { flexShrink: 0 },
+            '& > *': {flexShrink: 0},
         }}>
-            {chats.map((item: Chat, index: number) => (
+            {chats.sort((chatA, chatB) => chatA.date.getTime() >= chatB.date.getTime() ? 0 : 1)
+                .map((item: Chat, index: number) => (
                 <ChatItem
                     key={index}
                     itemName={item.name}
