@@ -1,4 +1,4 @@
-import {Stack, TextField, useTheme} from "@mui/material";
+import {Stack, useTheme} from "@mui/material";
 import ChatBox from "../../../components/ChatBox";
 import RoundButton from "../../../components/button/RoundButton";
 import {useContext, useEffect, useRef, useState} from "react";
@@ -10,15 +10,14 @@ import BoundingBox from "../../../components/BoundingBox";
 import ChatBubble from "./ChatBubble";
 import MenuItem from "@mui/material/MenuItem";
 import StyledSelect from "../../../components/SelectionMenuItem";
-import SettingsSuggestRoundedIcon from "@mui/icons-material/SettingsSuggestRounded";
-import WidgetsRoundedIcon from "@mui/icons-material/WidgetsRounded";
 import HoverableIcon from "../../../components/HoverableIcon";
 import {ChatAPIContext, CurrentSelectedChatContext, SidePanelCollapsibleContext} from "../ChatBot";
 import ChatAPI from "../../../services/ChatAPI";
 import ChatModel from "../../../model/ChatModel";
-import {ReactComponent as AiModelSVG} from '../../../assets/standard-model.svg';
 import MenuIcon from "../../../components/MenuIcon";
 import SettingsRoundedIcon from '@mui/icons-material/SettingsRounded';
+import PauseIcon from '@mui/icons-material/Pause';
+import LoadingBotChatBubble from "../../../components/LoadingBotChatBubble";
 
 function ChatArea() {
     const chatAPI: ChatAPI = useContext(ChatAPIContext)
@@ -29,6 +28,7 @@ function ChatArea() {
     const [modelList, setModelList] = useState<ChatModel[]>([]);
     const inputChatMessage = useRef<string>("")
     const bottomRef = useRef(null);
+    const [loading, setLoading] = useState<boolean>(false);
 
     console.log("selectedChat", selectedChat)
     console.log("messages", messages)
@@ -46,7 +46,7 @@ function ChatArea() {
         bottomRef.current?.scrollIntoView({behavior: 'smooth'});
     };
 
-    async function getMessages(id: number) {
+    async function getMessages(id: string) {
         try {
             const messages: Message[] = await chatAPI.getAllMessagesFromChat(id)
             setMessages(messages)
@@ -55,22 +55,19 @@ function ChatArea() {
         }
     }
 
-    async function sendMessage(chatID: number, inputText: string) {
-        console.log("sendMessage", chatID, inputText);
-        try {
-            const sentMessage: Message = {
-                message: inputText,
-                role: Role.HUMAN
-            }
-            const receivedMessage: Message = await chatAPI.sendChatMessage(chatID, sentMessage)
-            if (!messages) {
-                setMessages([sentMessage, receivedMessage])
-            } else {
-                setMessages([...messages, sentMessage, receivedMessage])
-            }
-        } catch (e) {
-
+    async function sendMessage() {
+        console.log("sendMessage", selectedChat.id, inputChatMessage.current);
+        setLoading(true)
+        const sentMessage: Message = {
+            message: inputChatMessage.current,
+            role: Role.HUMAN
         }
+        const currentMessages = messages ? messages : []
+        chatAPI.sendChatMessage(selectedChat.id, sentMessage).then(receivedMessage => {
+            setMessages([...currentMessages, sentMessage, receivedMessage])
+            setLoading(false)
+        })
+        setMessages([...currentMessages, sentMessage])
     }
 
     useEffect(() => {
@@ -144,6 +141,7 @@ function ChatArea() {
                                     return <ChatBubble message={value} index={index}/>
                                 })
                             }
+                            {loading && <LoadingBotChatBubble/>}
                             <div ref={bottomRef}/>
                         </Stack>
                     </Stack>
@@ -168,14 +166,23 @@ function ChatArea() {
                             maxRows={6} placeholder={'Message BLOOMChat'} multiline
                         ></ChatBox>
                         <RoundButton
-                            onClick={() => {
-                                sendMessage(selectedChat.id, inputChatMessage.current)
-                            }}
+                            disabled={loading}
+                            onClick={sendMessage}
                             sx={{
                                 ml: 'auto',
                                 background: 'linear-gradient(81deg, #e6fa72 6%, #62ffb8 58%)'
                             }}>
-                            <SendRoundedIcon fontSize={'small'} sx={{color: "#1e1e1e"}}/>
+                            <SendRoundedIcon fontSize={'small'} sx={{
+                                color: theme.palette.grey["900"],
+                                display: loading ? 'none' : 'inline-block'
+                            }}/>
+                            <PauseIcon
+                                fontSize={'small'}
+                                sx={{
+                                    color: theme.palette.grey["900"],
+                                    display: loading ? 'inline-block' : 'none'
+                                }}
+                            />
                         </RoundButton>
                     </BoundingBox>
                 </Stack>

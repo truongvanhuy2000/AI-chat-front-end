@@ -2,7 +2,6 @@ import ChatItem from "./ChatItem";
 import Box from "@mui/material/Box";
 import {useContext, useEffect} from "react";
 import ChatAPI from "../../../services/ChatAPI";
-import MockChatAPI from "../../../services/MockChatAPI";
 import Chat from "../../../model/Chat";
 import {useSnackbar} from "notistack";
 import {
@@ -52,8 +51,8 @@ function ChatHistory() {
                 .map((item: Chat, index: number) => (
                 <ChatItem
                     key={index}
-                    itemName={item.name}
-                    isSelected={selectedChat?.id === item.id} // Compare index to determine selected
+                    item={item}
+                    isSelected={selectedChat?.id === item?.id} // Compare index to determine selected
                     onClick={() => handleClick(item)}
                 />
             ))}

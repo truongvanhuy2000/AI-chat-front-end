@@ -4,7 +4,7 @@ import {Message} from "./Message";
  * Represent a chat session
  */
 interface Chat {
-    id: number;
+    id: string;
     name: string;
     date: Date;
     messages?: Message[];

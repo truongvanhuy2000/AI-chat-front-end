@@ -21,7 +21,7 @@ function ChatBubble({message, index}: ChatBubbleProps) {
         </>
         : <>
             <BoundingBox sx={{background: 'linear-gradient(81deg, #e6fa72 6%, #62ffb8 58%)'}}>
-                <Typography sx={{color: '#2f2f2f'}}>{message.message}</Typography>
+                <Typography sx={{color: theme.palette.grey["900"]}}>{message.message}</Typography>
             </BoundingBox>
             <UserSVG style={{ width: '50px'}}/>
         </>;

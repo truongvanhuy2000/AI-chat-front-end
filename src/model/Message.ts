@@ -5,13 +5,14 @@
  * modelName is used when client send chat request, causes they can change the model on the fly right ???
  */
 export interface Message {
-    id?: number;
+    id?: string;
     role: Role;
     message: string;
     modelName?: string;
+    conversationID?: string;
 }
 
 export enum Role {
-    HUMAN,
-    BOT
+    HUMAN = "user",
+    BOT = "assistant"
 }

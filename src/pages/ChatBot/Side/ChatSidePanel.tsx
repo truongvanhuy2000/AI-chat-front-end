@@ -46,6 +46,16 @@ function ChatSidePanel() {
         }
     }
 
+    async function onClickDeleteAllConversation() {
+        try {
+            await chatAPI.deleteAllChat()
+            const chatList = await chatAPI.getChatList()
+            setChats(chatList)
+        } catch (e) {
+
+        }
+    }
+
     return (
         <GenericSidePanel sx={{
             width: isOpen ? {xl: '300px', md: '250px', sm: '250px', xs: '250px'} : 0, // Adjust width for open/close
@@ -92,7 +102,7 @@ function ChatSidePanel() {
                     width: "100%"
                 }}
             >
-                <BoxMenuItem sx={{gap: '10px'}}>
+                <BoxMenuItem sx={{gap: '10px'}} onClick={onClickDeleteAllConversation}>
                     <DeleteOutlinedIcon color={"error"} fontSize={'small'}/>
                     <Typography>Clear conversations</Typography>
                 </BoxMenuItem>

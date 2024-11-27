@@ -8,7 +8,7 @@ interface ChatAPI {
      * Get info of a chat, don't put messages here
      * @param id
      */
-    getChatByID(id: number): Promise<Chat>;
+    getChatByID(id: string): Promise<Chat>;
     /**
      * Get the list of all chat, don't put messages here
      */
@@ -28,13 +28,13 @@ interface ChatAPI {
      * @param chat contain data to be edit
      * @param id chat id
      */
-    editChat(chat: Chat, id: number): Promise<Chat>;
+    editChat(chat: Chat, id: string): Promise<Chat>;
 
     /**
      * Get message history of a single chat, possible pagination ????
      * @param id chat id
      */
-    getAllMessagesFromChat(id: number): Promise<Message[]>;
+    getAllMessagesFromChat(id: string): Promise<Message[]>;
 
     /**
      * Get all possible chat model
@@ -46,7 +46,7 @@ interface ChatAPI {
      * @param chatID
      * @param message
      */
-    sendChatMessage(chatID: number, message: Message): Promise<Message>;
+    sendChatMessage(chatID: string, message: Message): Promise<Message>;
 }
 
 export default ChatAPI;

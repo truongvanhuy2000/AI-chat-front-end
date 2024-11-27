@@ -5,8 +5,8 @@ import {createContext, useEffect, useState} from "react";
 import {useTheme} from "@mui/material";
 import Chat from "../../model/Chat";
 import ChatAPI from "../../services/ChatAPI";
+import ServerChatAPI from "../../services/ServerChatAPI";
 import MockChatAPI from "../../services/MockChatAPI";
-import chatAPI from "../../services/ChatAPI";
 
 export const SidePanelCollapsibleContext = createContext(null);
 export const CurrentSelectedChatContext = createContext<CurrentSelectedChatContextProps>(null);
