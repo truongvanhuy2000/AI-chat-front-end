@@ -11,7 +11,7 @@ import ChatBubble from "./ChatBubble";
 import MenuItem from "@mui/material/MenuItem";
 import StyledSelect from "../../../components/SelectionMenuItem";
 import HoverableIcon from "../../../components/HoverableIcon";
-import {ChatAPIContext, CurrentSelectedChatContext, SidePanelCollapsibleContext} from "../ChatBot";
+import {ChatAPIContext, ChatListContext, CurrentSelectedChatContext, SidePanelCollapsibleContext} from "../ChatBot";
 import ChatAPI from "../../../services/ChatAPI";
 import ChatModel from "../../../model/ChatModel";
 import MenuIcon from "../../../components/MenuIcon";
@@ -24,14 +24,12 @@ function ChatArea() {
     const theme = useTheme();
     const [messages, setMessages] = useState<Message[]>([]);
     const [isOpen, togglePanel] = useContext(SidePanelCollapsibleContext);
-    const {selectedChat} = useContext(CurrentSelectedChatContext);
+    const {selectedChat, setSelectedChat} = useContext(CurrentSelectedChatContext);
     const [modelList, setModelList] = useState<ChatModel[]>([]);
     const inputChatMessage = useRef<string>("")
     const bottomRef = useRef(null);
     const [loading, setLoading] = useState<boolean>(false);
-
-    console.log("selectedChat", selectedChat)
-    console.log("messages", messages)
+    const {chats, setChats} = useContext(ChatListContext)
 
     async function getModelList() {
         try {
@@ -56,17 +54,27 @@ function ChatArea() {
     }
 
     async function sendMessage() {
-        console.log("sendMessage", selectedChat.id, inputChatMessage.current);
         setLoading(true)
         const sentMessage: Message = {
             message: inputChatMessage.current,
             role: Role.HUMAN
         }
         const currentMessages = messages ? messages : []
-        chatAPI.sendChatMessage(selectedChat.id, sentMessage).then(receivedMessage => {
-            setMessages([...currentMessages, sentMessage, receivedMessage])
-            setLoading(false)
-        })
+        if (!selectedChat) {
+            chatAPI.createNewChat(sentMessage).then(chat => {
+                console.log("chatAPI.createNewChat", chat)
+                setChats([...chats, chat])
+                setMessages(chat.messages)
+                setSelectedChat(chat)
+                setLoading(false)
+            })
+        } else {
+            chatAPI.sendChatMessage(selectedChat.id, sentMessage).then(receivedMessage => {
+                setMessages([...currentMessages, sentMessage, receivedMessage])
+                setLoading(false)
+            })
+        }
+
         setMessages([...currentMessages, sentMessage])
     }
 
@@ -107,7 +115,7 @@ function ChatArea() {
                     sx={{ml: 'auto'}}
                     defaultValue={1}
                     renderValue={(value) =>
-                        <Typography variant='h6' sx={{fontWeight: 'bold',}}>
+                        <Typography variant='h6' sx={{fontWeight: 'bold', color: theme.palette.grey["600"]}}>
                             {`${modelList.find(it => it.id === value)?.name}`}
                         </Typography>
                     }
@@ -115,7 +123,8 @@ function ChatArea() {
                     labelId="side-select-label"
                 >
                     {
-                        modelList.map(((it, index) => <MenuItem key={index} value={it.id}>{it.name}</MenuItem>))
+                        modelList.map(((it, index) =>
+                            <MenuItem key={index} value={it.id}>{it.name}</MenuItem>))
                     }
 
                 </StyledSelect>

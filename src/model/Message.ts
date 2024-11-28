@@ -10,6 +10,7 @@ export interface Message {
     message: string;
     modelName?: string;
     conversationID?: string;
+    conversationName?: string;
 }
 
 export enum Role {

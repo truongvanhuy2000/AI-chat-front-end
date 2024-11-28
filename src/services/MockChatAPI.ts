@@ -204,11 +204,18 @@ function sleep(ms) {
 }
 
 const MockChatAPI: ChatAPI = {
-    createNewChat(): Promise<Chat> {
+    async createNewChat(message: Message): Promise<Chat> {
+        await sleep(5 * 1000)
+        const responseMessage: Message = {
+            id: uuidv4(),
+            message: getRandomQuote(),
+            role: Role.BOT,
+        }
         const newChat: Chat = {
             date: new Date(),
             id: uuidv4(),
-            name: "New Conversation"
+            name: "New Conversation",
+            messages: [message, responseMessage]
         }
         dummyData.push(newChat);
         return Promise.resolve(newChat);
@@ -239,7 +246,7 @@ const MockChatAPI: ChatAPI = {
     }, async sendChatMessage(chatID: string, message: Message): Promise<Message> {
         await sleep(5 * 1000)
         const responseMessage: Message = {
-            id: message.id + 1,
+            id: uuidv4(),
             message: getRandomQuote(),
             role: Role.BOT,
         }

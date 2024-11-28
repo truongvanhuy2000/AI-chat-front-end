@@ -8,7 +8,8 @@ const BoundingBox = styled(Box)(({ theme }) => ({
     boxSizing: 'border-box',
     display: "flex",
     flexDirection: 'column',
-    color: theme.palette.text.primary
+    color: theme.palette.text.primary,
+    '& > *': {flexShrink: 0},
 }))
 
 export default BoundingBox;

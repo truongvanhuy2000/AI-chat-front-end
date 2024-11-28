@@ -1,6 +1,6 @@
 import GenericSidePanel from "../../../components/layout/SidePanel/GenericSidePanel";
 import Typography from "@mui/material/Typography";
-import {Divider, Stack, TextField, useMediaQuery} from "@mui/material";
+import {Divider, Stack, TextField, useMediaQuery, useTheme} from "@mui/material";
 import ChatHistory from "./ChatHistory";
 import ColorfulGradientButton from "../../../components/button/ColorfulGradientButton";
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
@@ -17,18 +17,19 @@ import {
     SidePanelCollapsibleContext
 } from "../ChatBot";
 import ChatAPI from "../../../services/ChatAPI";
-import Chat from "../../../model/Chat";
 
 import {ReactComponent as NewChatSVG} from '../../../assets/edit-edit-3.svg';
 import MenuIcon from "../../../components/MenuIcon";
+import {ThemeContext} from "@emotion/react";
 
 function ChatSidePanel() {
     const chatAPI: ChatAPI = useContext(ChatAPIContext)
-    const {chats, setChats}: ChatListContextProps = useContext(ChatListContext);
+    const {setChats}: ChatListContextProps = useContext(ChatListContext);
     const [isOpen, togglePanel] = useContext(SidePanelCollapsibleContext);
     const {setSelectedChat}: CurrentSelectedChatContextProps = useContext(CurrentSelectedChatContext);
     const isSm = useMediaQuery((theme) => theme.breakpoints.down("sm")); // Small screens
     const isMd = useMediaQuery((theme) => theme.breakpoints.down("md")); // Medium screens
+    const theme = useTheme();
 
     useEffect(() => {
         if ((isSm || isMd) && isOpen) {
@@ -37,13 +38,7 @@ function ChatSidePanel() {
     }, [isSm, isMd])
 
     async function onClickNewChat() {
-        try {
-            const newChat: Chat = await chatAPI.createNewChat()
-            setChats([...chats, newChat]);
-            setSelectedChat(newChat)
-        } catch (e) {
-
-        }
+        setSelectedChat(null)
     }
 
     async function onClickDeleteAllConversation() {
@@ -79,7 +74,7 @@ function ChatSidePanel() {
                         flexGrow: 1,
                     }}>
                     <NewChatSVG style={{width: '30px'}}/>
-                    <Typography>New chat</Typography>
+                    <Typography fontWeight={800} sx={{color: theme.palette.grey["900"]}}>New chat</Typography>
                 </ColorfulGradientButton>
             </Stack>
             <TextField

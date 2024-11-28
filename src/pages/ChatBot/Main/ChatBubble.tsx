@@ -4,6 +4,7 @@ import Typography from "@mui/material/Typography";
 import {Stack, useTheme} from "@mui/material";
 import {ReactComponent as RobotSVG} from '../../../assets/robot-face-icon.svg';
 import {ReactComponent as UserSVG} from '../../../assets/user-462.svg';
+import ReactMarkdown from 'react-markdown';
 
 interface ChatBubbleProps {
     message: Message,
@@ -16,7 +17,9 @@ function ChatBubble({message, index}: ChatBubbleProps) {
         ? <>
             <RobotSVG style={{ width: '50px'}}/>
             <BoundingBox sx={{background: 'transparent'}}>
-                <Typography color={'textPrimary'}>{message.message}</Typography>
+                <Typography color={'textPrimary'}>
+                    <ReactMarkdown>{message.message}</ReactMarkdown>
+                </Typography>
             </BoundingBox>
         </>
         : <>
