@@ -104,7 +104,7 @@ function ChatArea() {
             boxSizing: 'border-box',
             gap: '20px'
         }}>
-            <Stack direction={"row"} sx={{height: '30px'}}>
+            <Stack direction={"row"} sx={{height: '50px'}}>
                 {
                     !isOpen &&
                     <HoverableIcon onClick={togglePanel}>
@@ -143,7 +143,6 @@ function ChatArea() {
                         <Stack direction='column' gap={'40px'} sx={{
                             width: {xl: '60%', md: '80%', sm: '90%', xs: '90%'},
                             alignSelf: "center",
-                            '& > *': {flexShrink: 0},
                         }}>
                             {
                                 messages.map((value: Message, index: number) => {

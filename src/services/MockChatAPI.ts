@@ -31,14 +31,20 @@ let dummyData: Chat[] = [
             {
                 id: "4",
                 role: Role.BOT,
-                message: "Sure! What do you need help with specifically?",
+                message: "# The Rise of Artificial Intelligence\n" +
+                    "\n" +
+                    "In the ever-evolving landscape of technology, the rapid advancement of **artificial intelligence (AI)** has sparked both excitement and concern across various sectors, from **healthcare** to **finance**, **transportation**, and **entertainment**. As AI systems become more sophisticated, they offer the potential to revolutionize industries by:\n" +
+                    "\n" +
+                    "- Automating complex tasks\n" +
+                    "- Enhancing decision-making processes\n" +
+                    "- Creating new opportunities for innovation\n",
                 modelName: "ChatGPT-4"
             }
         ]
     },
     {
         id: "2",
-        name: "Project Discussion",
+        name: "Project Discussion about the world",
         date: new Date("2024-11-02T14:15:00Z"),
         messages: [
             {
@@ -60,7 +66,7 @@ let dummyData: Chat[] = [
             {
                 id: "4",
                 role: Role.BOT,
-                message: "1. Improve user interface\n2. Optimize database queries\n3. Implement API integrations",
+                message: "Primary goals:\n1. Improve user interface\n2. Optimize database queries\n3. Implement API integrations",
                 modelName: "ChatGPT-4"
             }
         ]

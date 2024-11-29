@@ -20,6 +20,7 @@ const DefaultTheme: Theme = createTheme({
         grey: {
             "900": "#111111",
             "800": "#1c1c1c",
+            "A700": "#252525",
             "700": "#2f2f2f"
         },
         divider: "hsl(0,0%,34%)", // --border-light

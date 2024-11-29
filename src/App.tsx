@@ -18,7 +18,7 @@ function App() {
     return (
         <div className="App">
             <ThemeProvider theme={DefaultTheme}>
-                <SnackbarProvider maxSnack={3}>
+                <SnackbarProvider maxSnack={3} autoHideDuration={2000}>
                     <BrowserRouter>
                         <AppRoutes/>
                     </BrowserRouter>
