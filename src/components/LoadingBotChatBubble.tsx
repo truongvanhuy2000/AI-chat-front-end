@@ -1,7 +1,7 @@
 import BoundingBox from "./BoundingBox";
 import Typography from "@mui/material/Typography";
 import {Stack} from "@mui/material";
-import {ReactComponent as RobotSVG} from '../assets/robot-face-icon.svg';
+import {ReactComponent as RobotSVG} from '../assets/robot-9.svg';
 import {ReactTyped} from "react-typed";
 
 function LoadingBotChatBubble() {

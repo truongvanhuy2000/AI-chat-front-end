@@ -26,7 +26,7 @@ function ChatArea() {
     const [isOpen, togglePanel] = useContext(SidePanelCollapsibleContext);
     const {selectedChat, setSelectedChat} = useContext(CurrentSelectedChatContext);
     const [modelList, setModelList] = useState<ChatModel[]>([]);
-    const inputChatMessage = useRef<string>("")
+    const inputChatMessage = useRef<any>()
     const bottomRef = useRef(null);
     const [loading, setLoading] = useState<boolean>(false);
     const {chats, setChats} = useContext(ChatListContext)
@@ -55,8 +55,9 @@ function ChatArea() {
 
     async function sendMessage() {
         setLoading(true)
+        console.log(inputChatMessage.current.value)
         const sentMessage: Message = {
-            message: inputChatMessage.current,
+            message: inputChatMessage.current.value,
             role: Role.HUMAN
         }
         const currentMessages = messages ? messages : []
@@ -76,7 +77,15 @@ function ChatArea() {
         }
 
         setMessages([...currentMessages, sentMessage])
+        inputChatMessage.current.value = ""
     }
+
+    const handleKeyDown = (event) => {
+        if (event.key === 'Enter') {
+            event.preventDefault()
+            sendMessage()
+        }
+    };
 
     useEffect(() => {
         getModelList().then()
@@ -170,7 +179,8 @@ function ChatArea() {
                         width: {xl: '60%', md: '80%', sm: '90%', xs: '90%'},
                     }}>
                         <ChatBox
-                            onChange={event => inputChatMessage.current = event.target.value}
+                            onKeyDown={handleKeyDown}
+                            inputRef={inputChatMessage}
                             maxRows={6} placeholder={'Message BLOOMChat'} multiline
                         ></ChatBox>
                         <RoundButton

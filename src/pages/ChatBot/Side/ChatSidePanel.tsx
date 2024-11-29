@@ -74,7 +74,7 @@ function ChatSidePanel() {
                         flexGrow: 1,
                     }}>
                     <NewChatSVG style={{width: '30px'}}/>
-                    <Typography fontWeight={800} sx={{color: theme.palette.grey["900"]}}>New chat</Typography>
+                    <Typography sx={{color: theme.palette.grey["900"]}}>New chat</Typography>
                 </ColorfulGradientButton>
             </Stack>
             <TextField
