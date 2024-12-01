@@ -64,6 +64,10 @@ function ChatArea() {
     }
 
     async function sendMessage() {
+        if (inputChatMessage.current.value == null || inputChatMessage.current.value === "") {
+            console.log("Null roi dm")
+            return
+        }
         setLoading(true)
         const sentMessage: Message = {
             message: inputChatMessage.current.value,
@@ -146,7 +150,7 @@ function ChatArea() {
                                 currentModel.current = modelList.find(it => it.id == event.target.value).name
                         }
                         renderValue={(value) =>
-                            <Typography variant='h6' sx={{fontWeight: 'bold', color: theme.palette.grey["600"]}}>
+                            <Typography variant='h6' sx={{fontWeight: 'bold', color: theme.palette.grey["600"], fontSize: '15px'}}>
                                 {`${modelList.find(it => it.id === value)?.name}`}
                             </Typography>
                         }
