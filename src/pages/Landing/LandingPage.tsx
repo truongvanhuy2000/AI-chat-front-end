@@ -6,9 +6,9 @@ import LandingFooter from "./LandingFooter";
 import {useNavigate} from "react-router-dom";
 
 const title: string = "BLOOMIE"
-const secondParagraph: string = "Unleash Your Creativity with Bloom"
-const description: string = "Generate stunning images with AI in seconds! Our platform lets you easily create " +
-    "unique visuals for any project, from artwork to marketing materials, powered by advanced artificial intelligence"
+const secondParagraph: string = "Eloquent Minds: Your AI Conversation Companion"
+const description: string = "Step into a world where brilliance meets conversation. Engage with an AI that’s insightful, " +
+    "creative, and always ready to inspire. Whether you seek answers, ideas, or just a chat, we’re here to redefine the art of dialogue"
 
 function LandingPage() {
     const navigate = useNavigate()
@@ -21,8 +21,8 @@ function LandingPage() {
                     <p className={style.secondParagraph}>{secondParagraph}</p>
                     <p className={style.description}>{description}</p>
                     <Button className={style.startButton} onClick={() => {
-                        navigate("/image-generator")
-                    }}>Start Generating Image</Button>
+                        navigate("/chat")
+                    }}>Start Chatting</Button>
                 </div>
                 <LandingFooter></LandingFooter>
             </div>

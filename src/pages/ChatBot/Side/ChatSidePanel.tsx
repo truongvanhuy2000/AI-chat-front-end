@@ -7,7 +7,7 @@ import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
 import BoxMenuItem from "../../../components/BoxMenuItem";
 import HoverableIcon from "../../../components/HoverableIcon";
-import {useContext, useEffect} from "react";
+import {useContext, useEffect, useState} from "react";
 import {
     ChatAPIContext,
     ChatListContext,
@@ -20,7 +20,7 @@ import ChatAPI from "../../../services/ChatAPI";
 
 import {ReactComponent as NewChatSVG} from '../../../assets/edit-edit-3.svg';
 import MenuIcon from "../../../components/MenuIcon";
-import {ThemeContext} from "@emotion/react";
+import DeleteConfirmationDialog from "../../../components/dialog/DeleteConfirmationDialog";
 
 function ChatSidePanel() {
     const chatAPI: ChatAPI = useContext(ChatAPIContext)
@@ -30,6 +30,8 @@ function ChatSidePanel() {
     const isSm = useMediaQuery((theme) => theme.breakpoints.down("sm")); // Small screens
     const isMd = useMediaQuery((theme) => theme.breakpoints.down("md")); // Medium screens
     const theme = useTheme();
+    const [openDeleteConfirmation, setOpenDeleteConfirmation] = useState(false);
+    const [search, setSearch] = useState("");
 
     useEffect(() => {
         if ((isSm || isMd) && isOpen) {
@@ -41,11 +43,12 @@ function ChatSidePanel() {
         setSelectedChat(null)
     }
 
-    async function onClickDeleteAllConversation() {
+    async function onDeleteAllConversation() {
         try {
             await chatAPI.deleteAllChat()
             const chatList = await chatAPI.getChatList()
             setChats(chatList)
+            setSelectedChat(null)
         } catch (e) {
 
         }
@@ -53,7 +56,7 @@ function ChatSidePanel() {
 
     return (
         <GenericSidePanel sx={{
-            width: isOpen ? {xl: '300px', md: '250px', sm: '250px', xs: '250px'} : 0, // Adjust width for open/close
+            width: isOpen ? {xl: '300px', md: '300px', sm: '300px', xs: '300px'} : 0, // Adjust width for open/close
             transition: "width 0.2s ease", // Smooth transition
             position: {xl: 'relative', md: 'relative', sm: 'absolute', xs: 'absolute'},
             padding: isOpen ? '10px 10px 10px 10px' : '0px',
@@ -84,25 +87,31 @@ function ChatSidePanel() {
                         <SearchOutlinedIcon/><Typography>Search conversations</Typography>
                     </Stack>}
                 variant="outlined"
+                onChange={event => setSearch(event.target.value)}
             />
             <Divider/>
-            <ChatHistory/>
-            <Divider/>
+            <ChatHistory search={search}/>
+            <Divider sx={{mt: 'auto'}}/>
             <Stack
                 direction='column'
                 sx={{
                     alignItems: 'center',
                     gap: '10px',
-                    mt: 'auto',
                     width: "100%"
                 }}
             >
-                <BoxMenuItem sx={{gap: '10px'}} onClick={onClickDeleteAllConversation}>
+                <BoxMenuItem sx={{gap: '10px'}} onClick={() => setOpenDeleteConfirmation(true)}>
                     <DeleteOutlinedIcon color={"error"} fontSize={'small'}/>
                     <Typography>Clear conversations</Typography>
                 </BoxMenuItem>
-
             </Stack>
+            <DeleteConfirmationDialog
+                title={"Confirm Deletion"}
+                content={"This action cannot be undone. Are you sure you want to proceed?"}
+                open={openDeleteConfirmation}
+                onAgree={onDeleteAllConversation}
+                onClose={() => setOpenDeleteConfirmation(false)}
+            />
         </GenericSidePanel>
     )
 }

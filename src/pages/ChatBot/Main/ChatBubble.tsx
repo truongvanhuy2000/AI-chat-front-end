@@ -9,6 +9,8 @@ import HoverableIcon from "../../../components/HoverableIcon";
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import {useSnackbar} from "notistack";
 import {useState} from "react";
+import {CopyToClipboard} from 'react-copy-to-clipboard';
+
 
 interface ChatBubbleProps {
     message: Message,
@@ -19,12 +21,6 @@ function ChatBubble({message, index}: ChatBubbleProps) {
     const theme = useTheme()
     const {enqueueSnackbar} = useSnackbar();
     const [isHovered, setIsHovered] = useState(false);
-
-    function copyToClipboard() {
-        navigator.clipboard.writeText(message.message).then(() => {
-            enqueueSnackbar("Copied to clipboard", {variant: 'success'});
-        })
-    }
 
     function onMouseEnter() {
         setIsHovered(true)
@@ -37,14 +33,21 @@ function ChatBubble({message, index}: ChatBubbleProps) {
     const messageDisplay = message.role === Role.BOT
         ? <>
             <RobotSVG style={{width: '50px', flexShrink: 0}}/>
-            <BoundingBox onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave} sx={{background: !isHovered ? 'transparent': theme.palette.grey["A700"]}}>
+            <BoundingBox onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}
+                         sx={{background: !isHovered ? 'transparent' : theme.palette.grey["A700"]}}>
                 <Typography color={'textPrimary'}>
                     <ReactMarkdown>{message.message}</ReactMarkdown>
                 </Typography>
-                <HoverableIcon onClick={copyToClipboard}
-                               sx={{width: '30px', visibility: isHovered ? 'visible' : 'hidden'}}>
-                    <ContentCopyIcon fontSize={'small'} sx={{color: theme.palette.primary.main}}/>
-                </HoverableIcon>
+                <CopyToClipboard
+                    onCopy={() => {
+                        enqueueSnackbar("Copied to clipboard", {variant: 'success'});
+                    }}
+                    text={message.message}>
+                    <HoverableIcon sx={{width: '30px', visibility: isHovered ? 'visible' : 'hidden'}}>
+                        <ContentCopyIcon fontSize={'small'} sx={{color: theme.palette.primary.main}}/>
+                    </HoverableIcon>
+                </CopyToClipboard>
+
             </BoundingBox>
         </>
         : <>

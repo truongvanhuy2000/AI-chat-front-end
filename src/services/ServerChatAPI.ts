@@ -8,7 +8,6 @@ import ChatModels from "./ChatModels";
 import {GetChatApiResponse, GetChatListApiResponse} from "../model/DTO/ChatDTO";
 
 class ServerChatAPI implements ChatAPI {
-    userID: string
 
     async createNewChat(message: Message): Promise<Chat> {
         let data: MessageRequest = {
@@ -19,13 +18,14 @@ class ServerChatAPI implements ChatAPI {
         try {
             let response = await axios.post<MessageDTO>("/send-chat", data);
             return {
-                date: new Date(),
+                createdAt: Date.now(),
                 id: response.data.conversation_id,
                 messages: [message, {
                     role: Role.BOT,
                     message: response.data.content,
                 }],
                 name: "New Conversation",
+                isNew: true
             }
         } catch (e) {
             console.error(e);
@@ -35,7 +35,7 @@ class ServerChatAPI implements ChatAPI {
 
     async deleteAllChat(): Promise<void> {
         try {
-            let response = await axios.delete("/delete-all-chat");
+            await axios.delete("/delete-all-chat");
         } catch (e) {
             console.error(e);
         }
@@ -51,8 +51,16 @@ class ServerChatAPI implements ChatAPI {
         return null
     }
 
-    editChat(chat: Chat, id: string): Promise<Chat> {
-        return Promise.resolve(undefined);
+    async editChat(chat: Chat, id: string): Promise<Chat> {
+        try {
+            await axios.post(`/edit-chat`, {
+                "new_name": chat.name,
+                "conversation_id": id,
+            })
+        } catch (e) {
+            console.error(e);
+        }
+        return null
     }
 
     async getAllMessagesFromChat(id: string): Promise<Message[]> {
@@ -61,12 +69,14 @@ class ServerChatAPI implements ChatAPI {
             let response = await axios.get<string>(`/get-all-msgs-by-id/${id}`)
             const jsonString = atob(response.data)
             const messageList: MessageDTO[] = JSON.parse(jsonString)
-            return messageList.map(((it, index) => {
-                return {
-                    role: it.role,
-                    message: it.content,
-                }
-            }))
+            return messageList
+                .sort((a, b) => Number(a.timestamp) > Number(b.timestamp) ? 1 : 0)
+                .map(((it, index) => {
+                    return {
+                        role: it.role,
+                        message: it.content,
+                    }
+                }))
         } catch (e) {
             console.error(e);
             return []
@@ -79,7 +89,7 @@ class ServerChatAPI implements ChatAPI {
             const jsonString = atob(response.data)
             const chatResponse: GetChatApiResponse = JSON.parse(jsonString)
             return {
-                date: new Date(),
+                createdAt: Number(chatResponse.conversations.createdAt),
                 id: chatResponse.conversations.ID,
                 messages: [],
                 name: chatResponse.conversations.conversationName
@@ -94,13 +104,14 @@ class ServerChatAPI implements ChatAPI {
             let response = await axios.get<string>("/get-chat-list");
             const jsonString = atob(response.data);
             const chatListResponse: GetChatListApiResponse = JSON.parse(jsonString);
-            return chatListResponse.conversations.map(((it, index) => {
-                return {
-                    id: it.ID,
-                    name: it.conversationName,
-                    date: new Date(Date.now() + index)
-                }
-            }))
+            return chatListResponse.conversations
+                .map(((it, index) => {
+                    return {
+                        id: it.ID,
+                        name: it.conversationName,
+                        createdAt: Number(it.createdAt)
+                    }
+                }))
         } catch (e) {
             console.error(e);
             return []
@@ -120,11 +131,12 @@ class ServerChatAPI implements ChatAPI {
         }
         try {
             let response = await axios.post<MessageDTO>("/send-chat", data);
-            console.log("sendChatMessage", response);
+            console.log("sendChatMessage", response.data);
             return {
                 message: response.data.content,
                 role: Role.BOT,
-                conversationID: response.data.conversation_id
+                conversationID: response.data.conversation_id,
+                conversationName: response.data.conversation_name
             }
         } catch (e) {
             console.error(e);

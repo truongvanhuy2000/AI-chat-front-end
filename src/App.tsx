@@ -6,7 +6,7 @@ import {ThemeProvider} from "@mui/material";
 import DefaultTheme from "./theme/DefaultTheme";
 import AxiosConfig from "./services/AxiosConfig";
 import {SnackbarProvider} from "notistack";
-import { v4 as uuidv4 } from 'uuid';
+import {v4 as uuidv4} from 'uuid';
 
 function App() {
     let userID = localStorage.getItem('auth.userID')

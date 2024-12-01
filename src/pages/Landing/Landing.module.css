@@ -23,6 +23,16 @@
     border: 2px solid #66fcf1 !important; /* Colored border */
     border-radius: 10px !important; /* Rounded corners */
     font-size: 20px !important;
+    transition: transform 0.3s ease, box-shadow 0.3s ease !important;
+}
+
+.startButton:hover {
+    background-color: rgba(195, 255, 251, 0.22) !important; /* Transparent background */
+    transform: scale(1.1); /* Slightly enlarge the image */
+}
+
+.startButton:active {
+    transform: scale(0.9); /* Slightly enlarge the image */
 }
 
 .content .title {

@@ -1,5 +1,4 @@
 import {Role} from "../Message";
-import exp from "node:constants";
 
 interface MessageDTO {
     success: boolean;
@@ -7,7 +6,8 @@ interface MessageDTO {
     content: string;
     role: Role;
     conversation_id: string;
-    created_at: number;
+    timestamp: number;
+    conversation_name?: string;
 }
 
 export interface MessageRequest {

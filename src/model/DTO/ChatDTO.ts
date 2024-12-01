@@ -2,7 +2,8 @@ export interface ChatDTO {
     ID: string;
     model: string;
     userID: string;
-    conversationName: string
+    conversationName: string;
+    createdAt: string;
 }
 
 export interface GetChatListApiResponse {

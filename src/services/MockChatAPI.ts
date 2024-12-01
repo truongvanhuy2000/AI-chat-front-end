@@ -4,13 +4,12 @@ import {Message, Role} from "../model/Message";
 import ChatModel from "../model/ChatModel";
 import ChatModels from "./ChatModels";
 // @ts-nocheck
-import { v4 as uuidv4 } from 'uuid';
+import {v4 as uuidv4} from 'uuid';
 
 let dummyData: Chat[] = [
     {
         id: "1",
         name: "Chat with Alice",
-        date: new Date("2024-11-01T10:20:30Z"),
         messages: [
             {
                 id: "1",
@@ -45,7 +44,6 @@ let dummyData: Chat[] = [
     {
         id: "2",
         name: "Project Discussion about the world",
-        date: new Date("2024-11-02T14:15:00Z"),
         messages: [
             {
                 id: "1",
@@ -74,7 +72,6 @@ let dummyData: Chat[] = [
     {
         id: "3",
         name: "Casual Chat",
-        date: new Date("2024-11-03T09:45:12Z"),
         messages: [
             {
                 id: "1",
@@ -103,7 +100,6 @@ let dummyData: Chat[] = [
     {
         id: "4",
         name: "Tech Support",
-        date: new Date("2024-11-04T16:30:00Z"),
         messages: [
             {
                 id: "1",
@@ -132,7 +128,6 @@ let dummyData: Chat[] = [
     {
         id: "5",
         name: "Learning Session",
-        date: new Date("2024-11-05T12:00:00Z"),
         messages: [
             {
                 id: "1",
@@ -166,7 +161,6 @@ let dummyData: Chat[] = [
     {
         id: "6",
         name: "Code Debugging",
-        date: new Date("2024-11-06T19:45:00Z"),
         messages: [
             {
                 id: "1",
@@ -218,7 +212,6 @@ const MockChatAPI: ChatAPI = {
             role: Role.BOT,
         }
         const newChat: Chat = {
-            date: new Date(),
             id: uuidv4(),
             name: "New Conversation",
             messages: [message, responseMessage]

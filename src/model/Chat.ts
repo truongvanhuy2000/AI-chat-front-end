@@ -4,10 +4,11 @@ import {Message} from "./Message";
  * Represent a chat session
  */
 interface Chat {
-    id: string;
+    id?: string;
     name: string;
-    date: Date;
+    createdAt?: number;
     messages?: Message[];
+    isNew?: boolean;
 }
 
 export default Chat
