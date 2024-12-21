@@ -28,7 +28,7 @@ function ChatBot() {
     const [isOpen, setIsOpen] = useState(true);
     const [selectedChat, setSelectedChat] = useState<Chat>(null);
     const [chats, setChats] = useState<Chat[]>([]);
-    const chatAPI: ChatAPI = new ServerChatAPI()
+    const chatAPI: ChatAPI = MockChatAPI
 
     const togglePanel = () => {
         setIsOpen(!isOpen);

@@ -8,7 +8,6 @@ import ChatModels from "./ChatModels";
 import {GetChatApiResponse, GetChatListApiResponse} from "../model/DTO/ChatDTO";
 
 class ServerChatAPI implements ChatAPI {
-
     async createNewChat(message: Message): Promise<Chat> {
         let data: MessageRequest = {
             content: message.message,
